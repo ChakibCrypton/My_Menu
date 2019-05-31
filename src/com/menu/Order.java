@@ -7,12 +7,61 @@ public class Order {
      * Display all available menus in the restaurant.
      * 
      */
-	
+	Scanner sc = new Scanner(System.in);
 	public void runMenu() {
-		this.displayAvailableMenu();
-		 Scanner sc = new Scanner(System.in);
-		 int nb = sc.nextInt();
-		 this.displaySelectedMenu(nb);
+		
+		    this.displayAvailableMenu();
+		    int nbMenu;
+		    do {
+		        nbMenu = sc.nextInt();
+		        this.displaySelectedMenu(nbMenu);
+		        switch (nbMenu) {
+		            case 1:
+		                displayAvailableSide(true);
+		                int nbSide;
+		                do {
+		                    nbSide = sc.nextInt();
+		                    displaySelectedSide(nbSide, true);
+		                } while (nbSide < 1 || nbSide > 3);
+		                displayAvailableDrink();
+		                int nbDrink;
+		                do {
+		                    nbDrink = sc.nextInt();
+		                    displaySelectedDrink(nbDrink);
+		                } while (nbDrink < 1 || nbDrink > 3);
+		                break;
+		            case 2:
+		                displayAvailableSide(true);
+		                do {
+		                    nbSide = sc.nextInt();
+		                    displaySelectedSide(nbSide, true);
+		                } while (nbSide < 1 || nbSide > 3);
+		                break;
+		            case 3:
+		                displayAvailableSide(false);
+		                do {
+		                    nbSide = sc.nextInt();
+		                    displaySelectedSide(nbSide, false);
+		                } while (nbSide < 1 || nbSide > 2);
+		                displayAvailableDrink();
+		                do {
+		                    nbDrink = sc.nextInt();
+		                    displaySelectedDrink(nbDrink);
+		                } while (nbDrink < 1 || nbDrink > 3);
+		                break;
+		        }
+		    } while (nbMenu < 1 || nbMenu > 3);
+		}
+	
+	
+	public void runMenus() {
+		System.out.println("Combien de menu voulez-vous ?");
+	    int MenuQuantity = sc.nextInt();
+	    int counter = 0;
+	    while(MenuQuantity > counter) {
+	    	this.runMenu();
+	    	 counter = counter + 1;
+	    }
 	}
     public void displayAvailableMenu() {
             System.out.println("Choix du menu: \n 1- poulet \n 2- boeuf \n 3- végétarien \n Que souhaitez vous comme menu ?");
@@ -49,27 +98,33 @@ public class Order {
                
     	     }}
     
-     public void displaySelectedSide(int nbSide, boolean allSidesEnable) {
-    	
-    	  
-    	 int i = 0; 
-    while(i == 0) {
+    public void displayAvailableSide (boolean x) {
+    	if(x) {
+    	System.out.println("Quels accomapagnements voulez-vous: légumes_fraies, des frites ou du riz ?");
+    }else {
+    	System.out.println("Voulez-vous du riz ou pas de riz ?");
+    }
+    	}
+    
+    public void displayAvailableDrink() {
+    	System.out.println("");
+    }
+    
+    public void displaySelectedSide(int nbSide, boolean allSidesEnable) {
+    
     if(allSidesEnable) {
     	 switch(nbSide) {
 		   case 1:
 			   String nom_1 = "légumes_fraies";
 			   System.out.println("Vous avez choisi le menu: " + nom_1 +" . Excellent choix.");
-			   i++;
 		       break;
 		   case 2:
 			   String nom_2 = "des frites";
 			   System.out.println("Vous avez choisi le menu: " + nom_2 +" . Excellent choix.");
-			   i++;
 		       break;
 		   case 3:
 			   String nom_3 = "ou du riz";
 			   System.out.println("Vous avez choisi le menu: " + nom_3 +" . Excellent choix.");
-			   i++;
 			   break;
 		   default:
 			   System.out.println("Vous n'avez pas choisies parmi les accompagnments disponibles ");
@@ -86,12 +141,11 @@ public class Order {
 	                break;
 	        }
 		}
-    } }
+    } 
      
      
      public void displaySelectedDrink(int nbDrink) {
-    	    int i = 0;
-    	 while(i == 0) {
+    	   
     	 switch (nbDrink) {
          case 1:
              System.out.println("Vous avez choisi comme boisson : eau plate\n");
@@ -105,6 +159,7 @@ public class Order {
          default:
              System.out.println("Vous n'avez pas choisi de boisson parmi les choix proposés\n");
              break;
-     }}
      }
+     }
+     
 }
