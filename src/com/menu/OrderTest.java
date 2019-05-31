@@ -51,4 +51,13 @@ public class OrderTest {
         order.displaySelectedMenu(-6);
         assertEquals("Vous n'avez pas choisi de menu parmi les choix proposés\n", outContent.toString().replace("\r\n", "\n"));
     }
+    @Test
+    public void Given_ChikenInStandardInput_When_MenuIsRun_Then_DisplayCorrectProcess() {
+        System.setIn(new ByteArrayInputStream("1\n".getBytes()));
+        order = new Order();
+        order.runMenu();
+        String output = outContent.toString().replace("\r\n", "\n");
+        assertEquals(output.endsWith("Vous avez choisi comme menu : poulet\n"), true);
+        assertEquals(output.length() > "Vous avez choisi comme menu : poulet\n".length(), true);
+    }
 }
