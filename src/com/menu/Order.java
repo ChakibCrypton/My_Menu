@@ -1,70 +1,111 @@
 package com.menu;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Order {
+	public class Order {
+	String orderSummary = "";
     /**
      * Display all available menus in the restaurant.
      * 
      */
 	Scanner sc = new Scanner(System.in);
+	
 	public void runMenu() {
-		
-		    this.displayAvailableMenu();
-		    int nbMenu;
-		    do {
-		        nbMenu = sc.nextInt();
-		        this.displaySelectedMenu(nbMenu);
-		        switch (nbMenu) {
-		            case 1:
-		                displayAvailableSide(true);
-		                int nbSide;
-		                do {
-		                    nbSide = sc.nextInt();
-		                    displaySelectedSide(nbSide, true);
-		                } while (nbSide < 1 || nbSide > 3);
-		                displayAvailableDrink();
-		                int nbDrink;
-		                do {
-		                    nbDrink = sc.nextInt();
-		                    displaySelectedDrink(nbDrink);
-		                } while (nbDrink < 1 || nbDrink > 3);
-		                break;
-		            case 2:
-		                displayAvailableSide(true);
-		                do {
-		                    nbSide = sc.nextInt();
-		                    displaySelectedSide(nbSide, true);
-		                } while (nbSide < 1 || nbSide > 3);
-		                break;
-		            case 3:
-		                displayAvailableSide(false);
-		                do {
-		                    nbSide = sc.nextInt();
-		                    displaySelectedSide(nbSide, false);
-		                } while (nbSide < 1 || nbSide > 2);
-		                displayAvailableDrink();
-		                do {
-		                    nbDrink = sc.nextInt();
-		                    displaySelectedDrink(nbDrink);
-		                } while (nbDrink < 1 || nbDrink > 3);
-		                break;
-		        }
-		    } while (nbMenu < 1 || nbMenu > 3);
-		}
-	
-	
-	public void runMenus() {
-		System.out.println("Combien de menu voulez-vous ?");
-	    int MenuQuantity = sc.nextInt();
-	    int counter = 0;
-	    while(MenuQuantity > counter) {
-	    	this.runMenu();
-	    	 counter = counter + 1;
+	    int nbMenu = askMenu();
+	    switch (nbMenu) {
+	        case 1:
+	            askSide(true);
+	            askDrink();
+	            break;
+	        case 2:
+	            askSide(true);
+	            break;
+	        case 3:
+	            askSide(false);
+	            askDrink();
+	            break;
 	    }
 	}
+	
+
+	 public void runMenus() {
+		    System.out.println("Combien souhaitez vous commander de menu ?");
+		    int menuQuantity = -1;
+		    boolean responseIsGood;
+		    do {
+		        try {
+		            menuQuantity = sc.nextInt();
+		            responseIsGood = true;
+		        } catch (InputMismatchException e) {
+		            sc.next();
+		            System.out.println("Vous devez saisir un nombre, correspondant au nombre de menus souhaités");
+		            responseIsGood = false;
+		        }
+		    } while (!responseIsGood);
+		    orderSummary = "Résumé de votre commande :%n";
+		    for (int i = 0; i < menuQuantity; i++) {
+		        orderSummary += "Menu " + (i + 1) + ":%n";
+		        runMenu();
+		    }
+		    System.out.println("");
+		    System.out.println(String.format(orderSummary));
+		}
+	
+ 
+	 public int askSomething(String category, String[] responses) {
+	        System.out.println("Choix " + category);
+	        for (int i = 1; i <= responses.length; i++)
+	            System.out.println(i + " - " + responses[i - 1]);
+	        System.out.println("Que souhaitez-vous comme " + category + "?");
+	        int nbResponse = 0;
+	        boolean responseIsGood;
+	        do {
+	            try {
+	                nbResponse = sc.nextInt();
+	                responseIsGood = (nbResponse >= 1 && nbResponse <= responses.length);
+	            } catch (InputMismatchException e) {
+	                sc.next();
+	                responseIsGood = false;
+	            }
+	            if (responseIsGood) {
+	                String choice = "Vous avez choisi comme " + category + " : " + responses[nbResponse - 1];
+	                orderSummary += choice + "%n";
+	                System.out.println(choice);
+	            } else {
+	                boolean isVowel = "aeiouy".contains(Character.toString(category.charAt(0)));
+	                if (isVowel)
+	                    System.out.println("Vous n'avez pas choisi d'" + category + " parmi les choix proposés");
+	                else
+	                    System.out.println("Vous n'avez pas choisi de " + category + " parmi les choix proposés");
+	            }
+	        } while (!responseIsGood);
+	        return nbResponse;
+	}
+	
+	public int askMenu() {
+		String[] menus = {"poulet", "boeuf", "végétarien"};
+	    int nbMenu = this.askSomething("menus", menus);
+	    return nbMenu;
+	}
+	
+	public void askSide(boolean allSidesEnable) {
+	    if (allSidesEnable) {
+	        String[] responsesAllSide = {"légumes frais", "frites", "riz"};
+	            askSomething("accompagnement", responsesAllSide);
+	           
+	    } else {
+	        String[] responsesOnlyRice = {"riz", "pas de riz"};
+	        askSomething("accompagnement", responsesOnlyRice);
+	    }
+	}
+	public void askDrink() {
+		String[] drinks = {"eau plate", "eau gazeuze", "soda"};
+		this.askSomething("boissons", drinks);
+	}
+		
     public void displayAvailableMenu() {
-            System.out.println("Choix du menu: \n 1- poulet \n 2- boeuf \n 3- végétarien \n Que souhaitez vous comme menu ?");
+	    System.out.println("Choix du menu: \n 1- poulet \n 2- boeuf \n 3- végétarien \n Que souhaitez vous comme menu ?");
     }
     /**
      * Display a selected menu.
